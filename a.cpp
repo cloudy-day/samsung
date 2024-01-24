@@ -1,49 +1,43 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<vector>
+#include<algorithm>
 using namespace std;
-const int mx=1e6+9;
-int cnt[mx];
 
-long long fn(int i,int m,vector<long long>&dp){
-    if(i>m)return 0;
-    if(dp[i]!=-1) return dp[i];
-    long long x = i*cnt[i] + fn(i+2,m,dp);
-    long long y = fn(i+1,m,dp) ;
-    return dp[i]=max(x,y);
+int ans;
+
+void fn(vector<int>&v,int x,int y,vector<int>&vis){
+
+    if(x==y){
+        ans=max(ans,x);
+    }
+    for(int i=0;i<v.size();i++){
+        if(!vis[i]){
+            vis[i]=1;
+            fn(v,x+v[i],y,vis);
+            fn(v,x,y+v[i],vis);
+            vis[i]=0;
+        }
+    }
 }
 
-
 int main(){
+
 
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("input.txt","r",stdin);
+    freopen("output.txt","w",stdout);
 
-    int n,m=0;
+    int n;
     cin>>n;
-    
+    vector<int>v(n);
+    for(auto &x:v)cin>>x;
 
-    for(int i=0;i<n;i++){
-        int x;
-        cin>>x;
-        cnt[x]++;
-        m=max(m,x);
-    }
-    
-    vector<long long>dp(mx,-1);
+    ans=-1;
+    vector<int>vis(n+1,0);
+    fn(v,0,0,vis);
+    cout<<ans<<endl;
 
-    cout<<fn(1,m,dp)<<endl;
-    
-   
     return 0;
 }
-
-/*
-5 5
-1 2 1
-2 5 2
-1 3 5
-3 4 1
-2 4 1
-*/
