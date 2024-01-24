@@ -13,24 +13,21 @@ Output: 167
 #include<iostream>
 #include<vector>
 #include<algorithm>
+#include<climits>
 using namespace std;
 
-int maxCoins(vector<int>& v){
-    int n=v.size();
-   
-    vector<vector<int>> dp(n, vector<int>(n));
-    for(int len=2; len<=n; len++){
-        for(int i=0; i<=n-len; i++){
-            int j = i+len-1;
-            for(int k=i+1;k<j;k++){
-                dp[i][j] = max(dp[i][j], dp[i][k] + dp[k][j] + v[i] * v[k] * v[j]);
+int fn(int i,int j,vector<int>&v,vector<vector<int>>&dp){
 
-            }
-        }
+    if(i>j || j<i)return 0;
+    if(i==j) return v[i-1]*v[i]*v[i+1];
+    if(dp[i][j]!=-1) return dp[i][j];
+    int m=INT_MIN,tmp;
+    for(int k=i;k<=j;k++){
+        tmp=v[i-1]*v[k]*v[j+1]+fn(i,k-1,v,dp)+fn(k+1,j,v,dp);
+        m=max(m,tmp);
     }
-    return dp[0][n-1];
+    return dp[i][j]=m;
 
-    
 }
 
 int main(){
@@ -42,6 +39,7 @@ int main(){
     for(int i=1; i<=n; i++){
         cin>>v[i];
     }
-    cout<<maxCoins(v)<<endl;
+    vector<vector<int>>dp(n+4,vector<int>(n+4,-1));
+    cout<<fn(1,n,v,dp)<<endl;
     return 0;
 }

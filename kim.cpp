@@ -1,31 +1,20 @@
 #include<iostream>
 #include<climits>
 #include<vector>
+#include<algorithm>
+
 using namespace std;
 int x[20],y[20],n,ans;
 
-int abs(int i){//Absolute function
-	if(i>0){
-		return i;
-	}
-	return -i;
-}
 
-int dist(int i, int j){//Calc dist between 2 points
-    int x1 = x[i], x2 = x[j];
-    int y1 = y[i], y2 = y[j];
-    
-    return (abs(x1-x2) + abs(y1-y2));
-}
-
-void optimalPath(int x,vector<bool>& visited,int nodes,int value){
+void optimalPath(int j,vector<bool>& visited,int nodes,int value){
 	if(n == nodes){//If number of nodes equal n then set value of answer
-		ans = min(ans,value + dist(x,n+1));
+		ans = min(ans,value + abs(x[j]-x[n+1]) + abs(y[j]-y[n+1]));
 	}
 	for(int i=1;i<=n;i++){
 		if(!visited[i]){
 			visited[i] = true;
-			optimalPath(i,visited,nodes+1,value + dist(x,i));//Dfs call
+			optimalPath(i,visited,nodes+1,value + abs(x[j]-x[i])+abs(y[j]-y[i]));//Dfs call
 			visited[i] = false;
 		}
 	}
@@ -37,8 +26,7 @@ int main(){
 
     freopen("input.txt","r",stdin);
     freopen("output.txt","w",stdout);
-	int tCases;
-	cin >> tCases;//For testcases
+	int tCases=10;//For testcases
 	for(int i=0;i<tCases;i++){
 		ans=INT_MAX;//Set ans to max value
 		cin >> n;
@@ -48,7 +36,7 @@ int main(){
 		}
 		vector<bool>visited(n+2,false);
 		optimalPath(0,visited,0,0);
-		cout << "#" << i+1 << " " << ans << endl;
+		cout << "# " << i+1 << " " << ans << endl;
 	}
 	return 0;
 }

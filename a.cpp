@@ -1,72 +1,49 @@
-
-#include <iostream>
-#include<vector>
-#include<algorithm>
-
+#include<bits/stdc++.h>
 using namespace std;
+const int mx=1e6+9;
+int cnt[mx];
 
-#define MAX 100
-
-int n,m;
-int cycle_start, cycle_end;
-
-vector<int>adj[MAX];
-
-bool dfs(int v,vector<int>& color, vector<int>& parent){
-    color[v]=1;
-    for(int u: adj[v]){
-        if(color[u]==0){
-            parent[u]=v;
-            if(dfs(u,color,parent)) return true;
-        }
-        else if(color[u]==1){
-            cycle_end=v;
-            cycle_start=u;
-            return true;
-        }
-    }
-    color[v]=2;
-    return false;
+long long fn(int i,int m,vector<long long>&dp){
+    if(i>m)return 0;
+    if(dp[i]!=-1) return dp[i];
+    long long x = i*cnt[i] + fn(i+2,m,dp);
+    long long y = fn(i+1,m,dp) ;
+    return dp[i]=max(x,y);
 }
 
 
-int main()
-{
-    freopen("input.txt","r",stdin);
-    freopen("output.txt","w",stdout);
+int main(){
 
-    cin>>n>>m;
-    vector<int>parent(n,-1);
-    vector<int>color(n,0);
-    for(int i=0;i<m;i++){
-        int x,y;
-        cin>>x>>y;
-        adj[x].push_back(y);
-    }
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-    cycle_start = -1;
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+
+    int n,m=0;
+    cin>>n;
+    
 
     for(int i=0;i<n;i++){
-        if(color[i]==0 && dfs(i,color,parent)) break;
+        int x;
+        cin>>x;
+        cnt[x]++;
+        m=max(m,x);
     }
-
-    if (cycle_start == -1) {
-        cout << "Acyclic" << endl;
-    } 
-    else {
-        vector<int> cycle;
-        cycle.push_back(cycle_start);
-        for (int v = cycle_end; v != cycle_start; v = parent[v])
-            cycle.push_back(v);
-        cycle.push_back(cycle_start);
-        reverse(cycle.begin(), cycle.end());
-
-        cout << "Cycle found: ";
-        for (int v : cycle)
-            cout << v << " ";
-        cout << endl;
-    }
-
     
+    vector<long long>dp(mx,-1);
+
+    cout<<fn(1,m,dp)<<endl;
+    
+   
     return 0;
 }
+
+/*
+5 5
+1 2 1
+2 5 2
+1 3 5
+3 4 1
+2 4 1
+*/

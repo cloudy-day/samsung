@@ -32,6 +32,7 @@ int bb(vector<int>&v,int c){
     int n = v.size();
     int low = 1;
     int high = v[n-1]-v[0];
+    
     while(low<=high){
         int mid = (low+high)/2;
         if(canWePlace(v,mid,c)){
@@ -44,16 +45,16 @@ int bb(vector<int>&v,int c){
     return high;
 }
 
-int aggressiveCows(vector<int>&v,int c){
-    int n = v.size();
-    int limit = v[n-1]-v[0];
-    for(int i=1;i<=limit;i++){
-        if(!canWePlace(v,i,c)){
-            return i-1;
-        }
-    }
-    return limit;
-}
+// int aggressiveCows(vector<int>&v,int c){
+//     int n = v.size();
+//     int limit = v[n-1]-v[0];
+//     for(int i=1;i<=limit;i++){
+//         if(!canWePlace(v,i,c)){
+//             return i-1;
+//         }
+//     }
+//     return limit;
+// }
 
 int main(){
 

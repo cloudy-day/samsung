@@ -3,37 +3,9 @@
 
 using namespace std;
 
+const int mx=100;
 
-int color[1000];
-bool edge[1005][1005];
-int e,v;
-
-bool isBiPartite(int src){
-    color[src]=1;
-    queue<int>q;
-    q.push(src);
-
-    while(!q.empty()){
-        int node = q.front();
-        q.pop();
-        if(edge[node][node]){
-            return false;
-        }
-        for(int i=0;i<v;i++){
-            if(edge[node][i]){
-                if(color[i]==-1){
-                    color[i]=1-color[node];
-                    q.push(i);
-                }
-                else if(color[i]==color[node]){
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
+vector<int>adj[mx];
 
 int main(){
 
@@ -43,34 +15,51 @@ int main(){
     freopen("input.txt","r",stdin);
     freopen("output.txt","w",stdout);
 
-    for(int i=0;i<1005;i++){
-        color[i]=-1;
-        for(int j=0;j<1005;j++){
-            edge[i][j]=false;
-        }
+    int node,edge;
+    cin>>node>>edge;
+
+    for(int i=0;i<edge;i++){
+        int x,y;
+        cin>>x>>y;
+        adj[x].push_back(y);
+        adj[y].push_back(x);
     }
 
-    cin>>v>>e;
-    for(int i=0;i<e;i++){
-        int a,b;
-        cin>>a>>b;
-        edge[a-1][b-1] = true;
-    }
+    vector<int>color(mx,-1);
 
-    for(int i=0;i<v;i++){
-        if(color[i]==-1){
-            if(!isBiPartite(i)){
-                cout<<i<<" "<<-1<<endl;
-                return 0;
+    queue<int>q;
+    q.push(0);
+    color[0]=0;
+
+    bool isBipartite=true;
+
+    while(!q.empty() && isBipartite){
+
+        int t = q.front();
+        q.pop();
+        for(int i=0;i<adj[t].size();i++){
+            int nt=adj[t][i];
+            if(color[nt]==-1){
+                color[nt]=1-color[t];
+                q.push(nt);
+            }
+            else if(color[nt]==color[t]){
+                isBipartite=false;
+                break;
             }
         }
     }
 
-    for(int i=0;i<v;i++){
-        if(color[i]==0){
-            cout<<i<< " "<<color[i]<<endl;
-        }
+    if(!isBipartite){
+        cout<<-1<<endl;
     }
+    else{
+        for(int i=0;i<node;i++){
+            if(color[i])cout<<i<<" ";
+        }
+        cout<<endl;
+    }
+
     
 
     return 0;

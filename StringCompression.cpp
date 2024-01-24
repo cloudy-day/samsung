@@ -3,7 +3,6 @@ using namespace std;
 
 void mergeAlpha(string s){
     int l = s.size();
-    cout<<l<<endl;
     int hash[26] = {0};
     for(int i = 0; i < l; i++){
         char letter = s[i];
@@ -16,6 +15,7 @@ void mergeAlpha(string s){
         i--;
         hash[letter - 'a'] +=  tmp;
     }
+    
     for(int i = 0; i < 26; i++){
         if(hash[i] != 0){
             cout<<(char)(i + 'a')<<" "<<hash[i]<<" ";
